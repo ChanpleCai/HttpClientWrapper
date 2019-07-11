@@ -10,7 +10,7 @@ namespace HttpClientWrapper
         #region Client
 
         private static readonly Lazy<NotDisposableClient> MainClient =
-            new Lazy<NotDisposableClient>(() => new HttpClient(), LazyThreadSafetyMode.ExecutionAndPublication);
+            new Lazy<NotDisposableClient>(() => new NotDisposableClient(new HttpClient()), LazyThreadSafetyMode.ExecutionAndPublication);
 
         public static NotDisposableClient Client() => MainClient.Value;
 

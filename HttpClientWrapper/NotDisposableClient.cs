@@ -10,8 +10,5 @@ namespace HttpClientWrapper
         }
 
         public HttpClient HttpClient { get; set; }
-
-        public static implicit operator NotDisposableClient(HttpClient client) =>
-            new NotDisposableClient(client);
     }
 }
