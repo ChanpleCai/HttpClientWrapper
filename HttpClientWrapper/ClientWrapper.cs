@@ -7,14 +7,10 @@ namespace HttpClientWrapper
 {
     public static class ClientWrapper
     {
-        #region Client
+        #region Default Client
 
         private static readonly Lazy<HttpClient> MainClient =
             new Lazy<HttpClient>(() => new HttpClient(), LazyThreadSafetyMode.ExecutionAndPublication);
-
-        #endregion
-
-        #region HttpClient
 
         #region Send
 
@@ -101,7 +97,7 @@ namespace HttpClientWrapper
 
         #endregion
 
-        #region HttpClient
+        #region Other Client
 
         #region Send
 
@@ -145,7 +141,6 @@ namespace HttpClientWrapper
 
         public static TResult Post<TResult>(this HttpClient client, string uri, HttpContent content = null)
             => client.Call<TResult>(_ => _.PostAsync(uri, content));
-
 
         public static Task PostAsync(this HttpClient client, string uri, HttpContent content = null,
             bool continueOnCapturedContext = true)
