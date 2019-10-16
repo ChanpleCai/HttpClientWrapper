@@ -14,84 +14,88 @@ namespace HttpClientWrapper
 
         #region Send
 
-        public static void Send(HttpRequestMessage request)
-            => MainClient.Value.Call(_ => _.SendAsync(request));
+        public static string Send(HttpRequestMessage request)
+            => MainClient.Value.Call(_ => _.SendAsync(request), request.RequestUri.ToString());
 
         public static TResult Send<TResult>(HttpRequestMessage request)
-            => MainClient.Value.Call<TResult>(_ => _.SendAsync(request));
+            => MainClient.Value.Call<TResult>(_ => _.SendAsync(request), request.RequestUri.ToString());
 
-        public static Task SendAsync(HttpRequestMessage request, bool continueOnCapturedContext = true)
-            => MainClient.Value.CallAsync(_ => _.SendAsync(request), continueOnCapturedContext);
+        public static Task<string> SendAsync(HttpRequestMessage request, bool continueOnCapturedContext = true)
+            => MainClient.Value.CallAsync(_ => _.SendAsync(request), request.RequestUri.ToString(),
+                continueOnCapturedContext);
 
         public static Task<TResult> SendAsync<TResult>(HttpRequestMessage request,
             bool continueOnCapturedContext = true)
-            => MainClient.Value.CallAsync<TResult>(_ => _.SendAsync(request), continueOnCapturedContext);
+            => MainClient.Value.CallAsync<TResult>(_ => _.SendAsync(request), request.RequestUri.ToString(),
+                continueOnCapturedContext);
 
         #endregion
 
         #region Get
 
-        public static void Get(string uri)
-            => MainClient.Value.Call(_ => _.GetAsync(uri));
+        public static string Get(string uri)
+            => MainClient.Value.Call(_ => _.GetAsync(uri), uri);
 
         public static TResult Get<TResult>(string uri)
-            => MainClient.Value.Call<TResult>(_ => _.GetAsync(uri));
+            => MainClient.Value.Call<TResult>(_ => _.GetAsync(uri), uri);
 
-        public static Task GetAsync(string uri, bool continueOnCapturedContext = true)
-            => MainClient.Value.CallAsync(_ => _.GetAsync(uri), continueOnCapturedContext);
+        public static Task<string> GetAsync(string uri, bool continueOnCapturedContext = true)
+            => MainClient.Value.CallAsync(_ => _.GetAsync(uri), uri, continueOnCapturedContext);
 
         public static Task<TResult> GetAsync<TResult>(string uri, bool continueOnCapturedContext = true)
-            => MainClient.Value.CallAsync<TResult>(_ => _.GetAsync(uri), continueOnCapturedContext);
+            => MainClient.Value.CallAsync<TResult>(_ => _.GetAsync(uri), uri, continueOnCapturedContext);
 
         #endregion
 
         #region Post
 
-        public static void Post(string uri, HttpContent content = null)
-            => MainClient.Value.Call(_ => _.PostAsync(uri, content));
+        public static string Post(string uri, HttpContent content = null)
+            => MainClient.Value.Call(_ => _.PostAsync(uri, content), uri);
 
         public static TResult Post<TResult>(string uri, HttpContent content = null)
-            => MainClient.Value.Call<TResult>(_ => _.PostAsync(uri, content));
+            => MainClient.Value.Call<TResult>(_ => _.PostAsync(uri, content), uri);
 
-        public static Task PostAsync(string uri, HttpContent content = null, bool continueOnCapturedContext = true)
-            => MainClient.Value.CallAsync(_ => _.PostAsync(uri, content), continueOnCapturedContext);
+        public static Task<string> PostAsync(string uri, HttpContent content = null,
+            bool continueOnCapturedContext = true)
+            => MainClient.Value.CallAsync(_ => _.PostAsync(uri, content), uri, continueOnCapturedContext);
 
         public static Task<TResult> PostAsync<TResult>(string uri, HttpContent content = null,
             bool continueOnCapturedContext = true)
-            => MainClient.Value.CallAsync<TResult>(_ => _.PostAsync(uri, content), continueOnCapturedContext);
+            => MainClient.Value.CallAsync<TResult>(_ => _.PostAsync(uri, content), uri, continueOnCapturedContext);
 
         #endregion
 
         #region Put
 
-        public static void Put(string uri, HttpContent content = null)
-            => MainClient.Value.Call(_ => _.PutAsync(uri, content));
+        public static string Put(string uri, HttpContent content = null)
+            => MainClient.Value.Call(_ => _.PutAsync(uri, content), uri);
 
         public static TResult Put<TResult>(string uri, HttpContent content = null)
-            => MainClient.Value.Call<TResult>(_ => _.PutAsync(uri, content));
+            => MainClient.Value.Call<TResult>(_ => _.PutAsync(uri, content), uri);
 
-        public static Task PutAsync(string uri, HttpContent content = null, bool continueOnCapturedContext = true)
-            => MainClient.Value.CallAsync(_ => _.PutAsync(uri, content), continueOnCapturedContext);
+        public static Task<string> PutAsync(string uri, HttpContent content = null,
+            bool continueOnCapturedContext = true)
+            => MainClient.Value.CallAsync(_ => _.PutAsync(uri, content), uri, continueOnCapturedContext);
 
         public static Task<TResult> PutAsync<TResult>(string uri, HttpContent content = null,
             bool continueOnCapturedContext = true)
-            => MainClient.Value.CallAsync<TResult>(_ => _.PutAsync(uri, content), continueOnCapturedContext);
+            => MainClient.Value.CallAsync<TResult>(_ => _.PutAsync(uri, content), uri, continueOnCapturedContext);
 
         #endregion
 
         #region Delete
 
-        public static void Delete(string uri)
-            => MainClient.Value.Call(_ => _.DeleteAsync(uri));
+        public static string Delete(string uri)
+            => MainClient.Value.Call(_ => _.DeleteAsync(uri), uri);
 
         public static TResult Delete<TResult>(string uri)
-            => MainClient.Value.Call<TResult>(_ => _.DeleteAsync(uri));
+            => MainClient.Value.Call<TResult>(_ => _.DeleteAsync(uri), uri);
 
-        public static Task DeleteAsync(string uri, bool continueOnCapturedContext = true)
-            => MainClient.Value.CallAsync(_ => _.DeleteAsync(uri), continueOnCapturedContext);
+        public static Task<string> DeleteAsync(string uri, bool continueOnCapturedContext = true)
+            => MainClient.Value.CallAsync(_ => _.DeleteAsync(uri), uri, continueOnCapturedContext);
 
         public static Task<TResult> DeleteAsync<TResult>(string uri, bool continueOnCapturedContext = true)
-            => MainClient.Value.CallAsync<TResult>(_ => _.DeleteAsync(uri), continueOnCapturedContext);
+            => MainClient.Value.CallAsync<TResult>(_ => _.DeleteAsync(uri), uri, continueOnCapturedContext);
 
         #endregion
 
@@ -101,89 +105,91 @@ namespace HttpClientWrapper
 
         #region Send
 
-        public static void Send(this HttpClient client, HttpRequestMessage request)
-            => client.Call(_ => _.SendAsync(request));
+        public static string Send(this HttpClient client, HttpRequestMessage request)
+            => client.Call(_ => _.SendAsync(request), request.RequestUri.ToString());
 
         public static TResult Send<TResult>(this HttpClient client, HttpRequestMessage request)
-            => client.Call<TResult>(_ => _.SendAsync(request));
+            => client.Call<TResult>(_ => _.SendAsync(request), request.RequestUri.ToString());
 
-        public static Task SendAsync(this HttpClient client, HttpRequestMessage request,
+        public static Task<string> SendAsync(this HttpClient client, HttpRequestMessage request,
             bool continueOnCapturedContext = true)
-            => client.CallAsync(_ => _.SendAsync(request), continueOnCapturedContext);
+            => client.CallAsync(_ => _.SendAsync(request), request.RequestUri.ToString(), continueOnCapturedContext);
 
         public static Task<TResult> SendAsync<TResult>(this HttpClient client, HttpRequestMessage request,
             bool continueOnCapturedContext = true)
-            => client.CallAsync<TResult>(_ => _.SendAsync(request), continueOnCapturedContext);
+            => client.CallAsync<TResult>(_ => _.SendAsync(request), request.RequestUri.ToString(),
+                continueOnCapturedContext);
 
         #endregion
 
         #region Get
 
-        public static void Get(this HttpClient client, string uri)
-            => client.Call(_ => _.GetAsync(uri));
+        public static string Get(this HttpClient client, string uri)
+            => client.Call(_ => _.GetAsync(uri), uri);
 
         public static TResult Get<TResult>(this HttpClient client, string uri)
-            => client.Call<TResult>(_ => _.GetAsync(uri));
+            => client.Call<TResult>(_ => _.GetAsync(uri), uri);
 
-        public static Task GetAsync(this HttpClient client, string uri, bool continueOnCapturedContext = true)
-            => client.CallAsync(_ => _.GetAsync(uri), continueOnCapturedContext);
+        public static Task<string> GetAsync(this HttpClient client, string uri, bool continueOnCapturedContext = true)
+            => client.CallAsync(_ => _.GetAsync(uri), uri, continueOnCapturedContext);
 
         public static Task<TResult> GetAsync<TResult>(this HttpClient client, string uri,
             bool continueOnCapturedContext = true)
-            => client.CallAsync<TResult>(_ => _.GetAsync(uri), continueOnCapturedContext);
+            => client.CallAsync<TResult>(_ => _.GetAsync(uri), uri, continueOnCapturedContext);
 
         #endregion
 
         #region Post
 
-        public static void Post(this HttpClient client, string uri, HttpContent content = null)
-            => client.Call(_ => _.PostAsync(uri, content));
+        public static string Post(this HttpClient client, string uri, HttpContent content = null)
+            => client.Call(_ => _.PostAsync(uri, content), uri);
 
         public static TResult Post<TResult>(this HttpClient client, string uri, HttpContent content = null)
-            => client.Call<TResult>(_ => _.PostAsync(uri, content));
+            => client.Call<TResult>(_ => _.PostAsync(uri, content), uri);
 
-        public static Task PostAsync(this HttpClient client, string uri, HttpContent content = null,
+        public static Task<string> PostAsync(this HttpClient client, string uri, HttpContent content = null,
             bool continueOnCapturedContext = true)
-            => client.CallAsync(_ => _.PostAsync(uri, content), continueOnCapturedContext);
+            => client.CallAsync(_ => _.PostAsync(uri, content), uri, continueOnCapturedContext);
 
         public static Task<TResult> PostAsync<TResult>(this HttpClient client, string uri, HttpContent content = null,
             bool continueOnCapturedContext = true)
-            => client.CallAsync<TResult>(_ => _.PostAsync(uri, content), continueOnCapturedContext);
+            => client.CallAsync<TResult>(_ => _.PostAsync(uri, content), uri, continueOnCapturedContext);
 
         #endregion
 
         #region Put
 
-        public static void Put(this HttpClient client, string uri, HttpContent content = null)
-            => client.Call(_ => _.PutAsync(uri, content));
+        public static string Put(this HttpClient client, string uri, HttpContent content = null)
+            => client.Call(_ => _.PutAsync(uri, content), uri);
 
         public static TResult Put<TResult>(this HttpClient client, string uri, HttpContent content = null)
-            => client.Call<TResult>(_ => _.PutAsync(uri, content));
+            => client.Call<TResult>(_ => _.PutAsync(uri, content), uri);
 
-        public static Task PutAsync(this HttpClient client, string uri, HttpContent content = null,
+        public static Task<string> PutAsync(this HttpClient client, string uri, HttpContent content = null,
             bool continueOnCapturedContext = true)
-            => client.CallAsync(_ => _.PutAsync(uri, content), continueOnCapturedContext);
+            => client.CallAsync(_ => _.PutAsync(uri, content), uri, continueOnCapturedContext);
 
         public static Task<TResult> PutAsync<TResult>(this HttpClient client, string uri, HttpContent content = null,
             bool continueOnCapturedContext = true)
-            => client.CallAsync<TResult>(_ => _.PutAsync(uri, content), continueOnCapturedContext);
+            => client.CallAsync<TResult>(_ => _.PutAsync(uri, content), uri, continueOnCapturedContext);
 
         #endregion
 
         #region Delete
 
-        public static void Delete(this HttpClient client, string uri)
-            => client.Call(_ => _.DeleteAsync(uri));
+        public static string Delete(this HttpClient client, string uri)
+            => client.Call(_ => _.DeleteAsync(uri), uri);
 
         public static TResult Delete<TResult>(this HttpClient client, string uri)
-            => client.Call<TResult>(_ => _.DeleteAsync(uri));
+            => client.Call<TResult>(_ => _.DeleteAsync(uri), uri);
 
-        public static Task DeleteAsync(this HttpClient client, string uri, bool continueOnCapturedContext = true)
-            => client.CallAsync(_ => _.DeleteAsync(uri), continueOnCapturedContext);
+        public static Task<string> DeleteAsync(this HttpClient client, string uri,
+            bool continueOnCapturedContext = true)
+            => client.CallAsync(_ => _.DeleteAsync(uri), uri, continueOnCapturedContext);
 
         public static Task<TResult> DeleteAsync<TResult>(this HttpClient client, string uri,
             bool continueOnCapturedContext = true)
-            => client.CallAsync<TResult>(_ => _.DeleteAsync(uri), continueOnCapturedContext);
+            => client.CallAsync<TResult>(_ => _.DeleteAsync(uri), uri, continueOnCapturedContext);
 
         #endregion
 

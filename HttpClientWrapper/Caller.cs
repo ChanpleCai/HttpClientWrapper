@@ -7,49 +7,84 @@ namespace HttpClientWrapper
 {
     public static class Caller
     {
-        internal static TResult Call<TResult>(this HttpClient client, Func<HttpClient, Task<HttpResponseMessage>> func)
+        internal static TResult Call<TResult>(this HttpClient client, Func<HttpClient, Task<HttpResponseMessage>> func,
+            string api)
         {
-            using (var send = func(client).GetAwaiter().GetResult())
+            try
             {
-                var result = send.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-                if (send.IsSuccessStatusCode)
-                    return string.IsNullOrWhiteSpace(result) ? default : JsonConvert.DeserializeObject<TResult>(result);
-                throw new HttpRequestException(result);
+                using (var send = func(client).GetAwaiter().GetResult())
+                {
+                    var result = send.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                    if (send.IsSuccessStatusCode)
+                        return string.IsNullOrWhiteSpace(result)
+                            ? default
+                            : JsonConvert.DeserializeObject<TResult>(result);
+                    throw new Exception(result);
+                }
+            }
+            catch (Exception e)
+            {
+                throw new HttpRequestException($"Error accessing interface {api} , error message: {e.Message}", e);
             }
         }
 
-        internal static void Call(this HttpClient client, Func<HttpClient, Task<HttpResponseMessage>> func)
+        internal static string Call(this HttpClient client, Func<HttpClient, Task<HttpResponseMessage>> func,
+            string api)
         {
-            using (var send = func(client).GetAwaiter().GetResult())
+            try
             {
-                if (!send.IsSuccessStatusCode)
-                    throw new HttpRequestException(send.Content.ReadAsStringAsync().GetAwaiter().GetResult());
+                using (var send = func(client).GetAwaiter().GetResult())
+                {
+                    var result = send.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                    if (send.IsSuccessStatusCode)
+                        return result;
+                    throw new Exception(result);
+                }
+            }
+            catch (Exception e)
+            {
+                throw new HttpRequestException($"Error accessing interface {api} , error message: {e.Message}", e);
             }
         }
 
         internal static async Task<TResult> CallAsync<TResult>(this HttpClient client,
-            Func<HttpClient, Task<HttpResponseMessage>> func, bool continueOnCapturedContext)
+            Func<HttpClient, Task<HttpResponseMessage>> func, string api, bool continueOnCapturedContext)
         {
-            string result;
-            using (var send = await func(client).ConfigureAwait(continueOnCapturedContext))
+            try
             {
-                result = await send.Content.ReadAsStringAsync().ConfigureAwait(continueOnCapturedContext);
-                if (!send.IsSuccessStatusCode) throw new HttpRequestException(result);
-            }
+                string result;
+                using (var send = await func(client).ConfigureAwait(continueOnCapturedContext))
+                {
+                    result = await send.Content.ReadAsStringAsync().ConfigureAwait(continueOnCapturedContext);
+                    if (!send.IsSuccessStatusCode) throw new Exception(result);
+                }
 
-            return string.IsNullOrWhiteSpace(result) ? default : JsonConvert.DeserializeObject<TResult>(result);
+                return string.IsNullOrWhiteSpace(result) ? default : JsonConvert.DeserializeObject<TResult>(result);
+            }
+            catch (Exception e)
+            {
+                throw new HttpRequestException($"Error accessing interface {api} , error message: {e.Message}", e);
+            }
         }
 
-        internal static async Task CallAsync(this HttpClient client, Func<HttpClient, Task<HttpResponseMessage>> func,
-            bool continueOnCapturedContext)
+        internal static async Task<string> CallAsync(this HttpClient client,
+            Func<HttpClient, Task<HttpResponseMessage>> func,
+            string api, bool continueOnCapturedContext)
         {
-            using (var send = await func(client).ConfigureAwait(continueOnCapturedContext))
+            try
             {
-                if (!send.IsSuccessStatusCode)
+                string result;
+                using (var send = await func(client).ConfigureAwait(continueOnCapturedContext))
                 {
-                    var result = await send.Content.ReadAsStringAsync().ConfigureAwait(continueOnCapturedContext);
-                    throw new HttpRequestException(result);
+                    result = await send.Content.ReadAsStringAsync().ConfigureAwait(continueOnCapturedContext);
+                    if (!send.IsSuccessStatusCode) throw new Exception(result);
                 }
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw new HttpRequestException($"Error accessing interface {api} , error message: {e.Message}", e);
             }
         }
     }
